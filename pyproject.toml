@@ -12,7 +12,8 @@ dependencies = [
     "requests>=2.32.3",
     "python-decouple>=3.8",
 ]
-requires-python = ">=3.8"
+# Sub-Dependency SciPy 1.9 supports Python 3.8-3.11
+requires-python = ">=3.8,<3.12"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 

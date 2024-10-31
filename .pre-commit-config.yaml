@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-yaml
+      - id: check-toml
+      - id: detect-private-key
+      - id: trailing-whitespace
+  - repo: local
+    hooks:
+      - id: black
+        name: black
+        entry: pdm run black mqp/
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: isort
+        name: isort
+        entry: pdm run isort mqp/
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: mypy
+        name: mypy
+        entry: pdm run python -m mypy mqp/
+        language: system
+        always_run: true
+        pass_filenames: false
+
+      - id: pylint
+        name: pylint
+        entry: pdm run python -m pylint mqp/
+        language: system
+        always_run: true
+        pass_filenames: false

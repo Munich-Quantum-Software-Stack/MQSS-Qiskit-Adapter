@@ -1,9 +1,8 @@
 """Mock class for MQPClient"""
 
-from typing import Any, Optional
+from typing import Dict, Optional
 
 from mqp_client import ResourceInfo  # type: ignore
-from typing import Dict, Optional
 
 
 class MockMQPClient:
@@ -13,9 +12,9 @@ class MockMQPClient:
         """Return the resource info"""
         if name == "res_cmap":
             return get_resource_info_cmap()
-        elif name == "res_no_cmap":
+        if name == "res_no_cmap":
             return get_resource_info_no_cmap()
-        elif name == "res_offline":
+        if name == "res_offline":
             return get_resource_info_offline()
         return None
 

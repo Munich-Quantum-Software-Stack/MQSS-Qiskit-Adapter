@@ -55,7 +55,7 @@ class MQPJob(JobV1):
                 }
                 for _counts in res_counts
             ],
-            "date": {
+            "timestamps": {
                 "submitted": res.timestamp_submitted,
                 "scheduled": res.timestamp_scheduled,
                 "completed": res.timestamp_completed,

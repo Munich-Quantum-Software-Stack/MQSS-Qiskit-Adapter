@@ -1,6 +1,6 @@
 """MQP Qiskit Provider"""
 
-from typing import Optional
+from typing import List, Optional
 from warnings import warn
 
 from mqp_client import MQPClient  # type: ignore
@@ -41,7 +41,7 @@ class MQPProvider(ProviderV1):
         )
         return MQPBackend(name, self._client, **kwargs)
 
-    def backends(self, name=None, online_backends=False, **kwargs) -> list[MQPBackend]:
+    def backends(self, name=None, online_backends=False, **kwargs) -> List[MQPBackend]:
         """Return a list of available backends
 
         Args:

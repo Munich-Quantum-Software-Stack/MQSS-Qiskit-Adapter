@@ -1,7 +1,7 @@
 """Module to test the MQP Provider"""
 
 from mqp.qiskit_provider import MQPProvider
-from mqp_client import MQPClient
+from mqp_client import MQPClient  # type: ignore
 
 
 def test_provider():

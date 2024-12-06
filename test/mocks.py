@@ -9,9 +9,6 @@ from typing import Dict, Optional
 class MockMQPClient:
     """Mock MQPClient class"""
 
-    def __init__(self, token: str, url: Optional[str] = None) -> None:
-        super().__init__(token=token, url=url)
-
     def get_resource_info(self, name: str) -> Optional[ResourceInfo]:
         """Return the resource info"""
         if name == "res_cmap":
@@ -20,6 +17,7 @@ class MockMQPClient:
             return get_resource_info_no_cmap()
         elif name == "res_offline":
             return get_resource_info_offline()
+        return None
 
     def resources(self) -> Optional[Dict[str, ResourceInfo]]:
         """Return the resources"""
@@ -32,7 +30,7 @@ class MockMQPClient:
         }
 
 
-def get_resource_info_cmap() -> Optional[ResourceInfo]:
+def get_resource_info_cmap() -> ResourceInfo:
     """Return the resource info"""
     return ResourceInfo(
         name="res_cmap",
@@ -60,7 +58,7 @@ def get_resource_info_cmap() -> Optional[ResourceInfo]:
     )
 
 
-def get_resource_info_no_cmap() -> Optional[ResourceInfo]:
+def get_resource_info_no_cmap() -> ResourceInfo:
     """Return the resource info"""
     return ResourceInfo(
         name="res_no_cmap",
@@ -71,7 +69,7 @@ def get_resource_info_no_cmap() -> Optional[ResourceInfo]:
     )
 
 
-def get_resource_info_offline() -> Optional[ResourceInfo]:
+def get_resource_info_offline() -> ResourceInfo:
     """Return the resource info"""
     return ResourceInfo(
         name="res_offline",

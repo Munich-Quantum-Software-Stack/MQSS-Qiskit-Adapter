@@ -25,7 +25,7 @@ class MQPBackend(BackendV2):
         super().__init__(**kwargs)
         self.name = name
         self.client = client
-        _resource_info = resource_info or self.client.resource_info(self.name)
+        _resource_info = resource_info or self.client.get_resource_info(self.name)
         assert _resource_info is not None
         self._coupling_map = get_coupling_map(_resource_info)
         self._target = get_target(_resource_info)
@@ -38,10 +38,12 @@ class MQPBackend(BackendV2):
 
     @property
     def coupling_map(self) -> CouplingMap:
+        """Return the CouplingMap for the backend"""
         return self._coupling_map
 
     @property
     def target(self) -> Target:
+        """Return the Target for the backend"""
         if self._target is None:
             raise NotImplementedError(f"Target for {self.name} is not available.")
         return self._target
@@ -57,6 +59,16 @@ class MQPBackend(BackendV2):
         no_modify: bool = False,
         **options,
     ) -> MQPJob:
+        """Run a circuit on the backend
+
+        Args:
+            run_input (Union[QuantumCircuit, List[QuantumCircuit]]): quantum circuit(s) to run
+            shots (int): number of shots (default: 10000)
+            no_modify (bool): do not modify/transpile the circuit (default: False)
+
+        Returns:
+            MQPJob: job instance
+        """
 
         if isinstance(run_input, QuantumCircuit):
             _circuits = str([qasm_str(run_input)])

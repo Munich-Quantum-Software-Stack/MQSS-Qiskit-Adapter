@@ -17,9 +17,15 @@ class MQPJob(JobV1):
         return NotImplementedError("Submit jobs via the MQPClient")
 
     def cancel(self):
+        """Cancel the job"""
         self.client.cancel(self.job_id())
 
     def status(self):
+        """Return the job status
+
+        Returns:
+            JobStatus: The current job status.
+        """
         mqp_status = self.client.status(self.job_id())
         if mqp_status == JobStatus.PENDING:
             return QiskitJobStatus.INITIALIZING
@@ -34,6 +40,11 @@ class MQPJob(JobV1):
         raise RuntimeWarning(f"Unknown job status: {mqp_status}.")
 
     def result(self):
+        """Return the result of the job
+
+        Returns:
+            Result: Result object
+        """
         res = self.client.wait_for_result(self.job_id())
         if isinstance(res.counts, list):
             res_counts = res.counts

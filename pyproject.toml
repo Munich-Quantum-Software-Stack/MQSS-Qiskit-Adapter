@@ -17,6 +17,11 @@ requires-python = ">=3.8,<3.12"
 readme = "README.md"
 license = {text = "Apache-2.0"}
 
+[tool.pdm]
+includes = [
+    "CHANGELOG.md"
+]
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"

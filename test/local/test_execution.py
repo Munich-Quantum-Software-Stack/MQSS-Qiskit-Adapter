@@ -119,6 +119,15 @@ def test_backends_online():
 
 
 @pytest.mark.skipif(TOKEN is None, reason="MQP_TOKEN not provided")
+def test_backends():
+    """Test get_backend for all backends"""
+    provider = MQPProvider(token=TOKEN, url=URL)
+    backend = provider.backends()
+    backend_names = [b.name for b in backend]
+    print(f"online_backends : {backend_names}")
+
+
+@pytest.mark.skipif(TOKEN is None, reason="MQP_TOKEN not provided")
 def test_transpiler():
     """Test transpilation only at user side"""
     provider = MQPProvider(token=TOKEN, url=URL)

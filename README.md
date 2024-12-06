@@ -35,3 +35,7 @@ result = job.result()
 # get the job's resulting counts
 counts = result.get_counts()
 ```
+
+## Changelog
+
+See the [CHANGELOG](CHANGELOG.md) for details on changes in each version.

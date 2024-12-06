@@ -1,21 +1,26 @@
 
 [project]
 name = "mqp-qiskit-provider"
-version = "0.1.2"
+version = "0.1.3"
 description = ""
 authors = [
     {name = "mqss", email = "mqss@munich-quantum-valley.de"},
 ]
 dependencies = [
     "qiskit>=0.45,<1.3",
-    "mqp-client>=0.1.2",
     "requests>=2.32.3",
     "python-decouple>=3.8",
+    "mqp-client>=0.1.4",
 ]
 # Sub-Dependency SciPy 1.9 supports Python 3.8-3.11
 requires-python = ">=3.8,<3.12"
 readme = "README.md"
 license = {text = "Apache-2.0"}
+
+[tool.pdm]
+includes = [
+    "CHANGELOG.md"
+]
 
 [build-system]
 requires = ["pdm-backend"]
@@ -40,3 +45,7 @@ profile = "black"
 src_paths = ["mqp", "test"]
 known_first_party = ["mqp"]
 
+[tool.pytest.ini_options]
+testpaths = ["test"]
+addopts = ["--ignore=local", "-v", "-s"]
+norecursedirs = ["local"]

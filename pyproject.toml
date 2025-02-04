@@ -1,7 +1,7 @@
 
 [project]
 name = "mqp-qiskit-provider"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 authors = [
     {name = "mqss", email = "mqss@munich-quantum-valley.de"},
@@ -11,6 +11,7 @@ dependencies = [
     "requests>=2.32.3",
     "python-decouple>=3.8",
     "mqp-client>=0.1.4",
+    "qiskit-qasm3-import>=0.5.1",
 ]
 # Sub-Dependency SciPy 1.9 supports Python 3.8-3.11
 requires-python = ">=3.8,<3.12"

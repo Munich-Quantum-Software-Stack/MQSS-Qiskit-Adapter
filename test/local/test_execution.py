@@ -142,3 +142,31 @@ def test_transpiler():
         # print(simple_circ.draw())
         # print(transpiled_circ.draw())
         assert transpiled_circ is not None
+
+
+@pytest.mark.skipif(TOKEN is None, reason="MQP_TOKEN not provided")
+def test_pending_jobs():
+    """Test get number of pending jobs"""
+    provider = MQPProvider(token=TOKEN, url=URL)
+    for backend in provider.backends():
+        print(f"pending_jobs : {backend.name}")
+        print(f"{backend.name} : {backend.num_pending_jobs}")
+        assert backend.num_pending_jobs >= 0
+
+
+@pytest.mark.skipif(TOKEN is None, reason="MQP_TOKEN not provided")
+def test_submit_qasm3_job():
+    """Test job submission with QASM3 format"""
+    provider = MQPProvider(token=TOKEN, url=URL)
+    available_backends = [_b.name for _b in provider.backends(online_backends=True)]
+    final_backends = [b for b in available_backends if b in BACKENDS]
+    print(f"submit_qasm3_job : {final_backends}")
+    for backend_name in final_backends:
+        backend = provider.backends(name=backend_name)[0]
+        job = backend.run(simple_circ, shots=200, qasm3=True)
+        try:
+            print(f"{backend.name} : {job.result().get_counts()}")
+            assert job.status() == QiskitJobStatus.DONE
+        except RuntimeError as _err:
+            assert str(_err).find("offline") > -1
+            print(f"{backend.name} : offline")

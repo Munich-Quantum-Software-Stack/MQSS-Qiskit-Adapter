@@ -5,7 +5,8 @@ from typing import List, Optional, Union
 from mqp_client import MQPClient, ResourceInfo  # type: ignore
 from qiskit.circuit import QuantumCircuit  # type: ignore
 from qiskit.providers import BackendV2, Options  # type: ignore
-from qiskit.qasm2 import dumps as qasm_str  # type: ignore
+from qiskit.qasm2 import dumps as qasm2_str  # type: ignore
+from qiskit.qasm3 import dumps as qasm3_str  # type: ignore
 from qiskit.transpiler import CouplingMap, Target  # type: ignore
 
 from .job import MQPJob
@@ -52,29 +53,42 @@ class MQPBackend(BackendV2):
     def max_circuits(self) -> Optional[int]:
         return None
 
+    @property
+    def num_pending_jobs(self) -> int:
+        """Returns the number of jobs waiting to be executed on the backend"""
+        return self.client.get_device_num_pending_jobs(self.name)
+
     def run(
         self,
         run_input: Union[QuantumCircuit, List[QuantumCircuit]],
         shots: int = 10000,
         no_modify: bool = False,
+        qasm3: bool = False,
         **options,
     ) -> MQPJob:
         """Run a circuit on the backend
 
         Args:
             run_input (Union[QuantumCircuit, List[QuantumCircuit]]): quantum circuit(s) to run
-            shots (int): number of shots (default: 10000)
+            shots (int): number of shots (default: 1024)
             no_modify (bool): do not modify/transpile the circuit (default: False)
+            qasm3 (bool): use QASM3 format to send the circuit (default: False)
 
         Returns:
             MQPJob: job instance
         """
 
         if isinstance(run_input, QuantumCircuit):
-            _circuits = str([qasm_str(run_input)])
+            _circuits = (
+                str([qasm3_str(run_input)]) if qasm3 else str([qasm2_str(run_input)])
+            )
         else:
-            _circuits = str([qasm_str(qc) for qc in run_input])
-        _circuit_format = "qasm"
+            _circuits = (
+                str([qasm3_str(qc) for qc in run_input])
+                if qasm3
+                else str([qasm2_str(qc) for qc in run_input])
+            )
+        _circuit_format = "qasm3" if qasm3 else "qasm"
 
         job_id = self.client.submit_job(
             resource_name=self.name,
@@ -84,6 +98,3 @@ class MQPBackend(BackendV2):
             no_modify=no_modify,
         )
         return MQPJob(self.client, job_id)
-
-
-# circuit=b64encode(pickle_dumps(circuits)).decode(encoding="ascii"),

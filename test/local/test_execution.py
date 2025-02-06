@@ -104,9 +104,8 @@ def test_backends_name():
     """Test get_backend for all backends"""
     provider = MQPProvider(token=TOKEN, url=URL)
     for backend_name in BACKENDS:
-        backend = provider.backends(name=backend_name)
-        assert len(backend) == 1
-        assert backend[0].name == backend_name
+        [backend] = provider.backends(name=backend_name)
+        assert backend.name == backend_name
 
 
 @pytest.mark.skipif(TOKEN is None, reason="MQP_TOKEN not provided")

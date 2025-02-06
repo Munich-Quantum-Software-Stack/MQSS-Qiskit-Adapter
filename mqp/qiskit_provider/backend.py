@@ -14,7 +14,11 @@ from .mqp_resources import get_coupling_map, get_target
 
 
 class MQPBackend(BackendV2):
-    """MQP Backend class"""
+    """MQP Backend class: This class extends Qiskit's BackendV2 class
+    and provides methods to compile and run circuits on the backend.
+    Users do not need to create an instance of this class directly;
+    it is created and returned by the MQPProvider when a backend is requested.
+    """
 
     def __init__(
         self,
@@ -39,12 +43,26 @@ class MQPBackend(BackendV2):
 
     @property
     def coupling_map(self) -> CouplingMap:
-        """Return the CouplingMap for the backend"""
+        """Return the
+        [CouplingMap](https://qiskit.org/documentation/stubs/qiskit.transpiler.CouplingMap.html)
+        for the backend
+
+        Returns:
+            Coupling map for the backend
+        """
         return self._coupling_map
 
     @property
     def target(self) -> Target:
-        """Return the Target for the backend"""
+        """Return the [Target](https://qiskit.org/documentation/stubs/qiskit.transpiler.Target.html)
+        for the backend
+
+        Returns:
+            Target for the backend
+
+        Raises:
+            NotImplementedError: Target for the backend is not available/implemented
+        """
         if self._target is None:
             raise NotImplementedError(f"Target for {self.name} is not available.")
         return self._target
@@ -55,27 +73,31 @@ class MQPBackend(BackendV2):
 
     @property
     def num_pending_jobs(self) -> int:
-        """Returns the number of jobs waiting to be executed on the backend"""
+        """Returns the number of jobs waiting to be schedules on the backend
+
+        Returns:
+            Number of pending jobs
+        """
         return self.client.get_device_num_pending_jobs(self.name)
 
     def run(
         self,
         run_input: Union[QuantumCircuit, List[QuantumCircuit]],
-        shots: int = 10000,
+        shots: int = 1024,
         no_modify: bool = False,
         qasm3: bool = False,
         **options,
     ) -> MQPJob:
-        """Run a circuit on the backend
+        """Submit a circuit/batch of circuits to the backend
 
         Args:
             run_input (Union[QuantumCircuit, List[QuantumCircuit]]): quantum circuit(s) to run
-            shots (int): number of shots (default: 1024)
-            no_modify (bool): do not modify/transpile the circuit (default: False)
-            qasm3 (bool): use QASM3 format to send the circuit (default: False)
+            shots (int): number of shots
+            no_modify (bool): do not modify/transpile the circuit
+            qasm3 (bool): use QASM3 format to send the circuit
 
         Returns:
-            MQPJob: job instance
+            An instance of MQPJob
         """
 
         if isinstance(run_input, QuantumCircuit):

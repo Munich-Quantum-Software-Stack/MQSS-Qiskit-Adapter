@@ -1,13 +1,19 @@
-"""MQPJob Module"""
+"""MQPJob Module
+This module defines the MQPJob class, which extends Qiskit's JobV1 class to manage job
+cancellation, status retrieval, and result fetching for MQP backends using the MQPClient.
+"""
 
-from mqp_client import JobStatus, MQPClient  # type: ignore
-from qiskit.providers import JobStatus as QiskitJobStatus  # type: ignore
+from mqp_client import JobStatus as MQPJobStatus  # type: ignore
+from mqp_client import MQPClient
+from qiskit.providers import JobStatus  # type: ignore
 from qiskit.providers import JobV1  # type: ignore
 from qiskit.result import Counts, Result  # type: ignore
 
 
 class MQPJob(JobV1):
-    """MQPJob Class"""
+    """MQPJob Class: This class is used to manage jobs. Users do not need to create
+    an instance of this class directly; it is created and returned by the MQPBackend
+    when a job is submitted via MQPBackend.run."""
 
     def __init__(self, client: MQPClient, job_id: str, **kwargs) -> None:
         super().__init__(None, job_id, **kwargs)
@@ -20,30 +26,33 @@ class MQPJob(JobV1):
         """Cancel the job"""
         self.client.cancel(self.job_id())
 
-    def status(self):
-        """Return the job status
+    def status(self) -> JobStatus:
+        """Return the job's current status
 
         Returns:
-            JobStatus: The current job status.
+            The status of the job.
+            ([JobStatus](https://qiskit.org/documentation/stubs/qiskit.providers.JobStatus.html)).
+
         """
         mqp_status = self.client.status(self.job_id())
-        if mqp_status == JobStatus.PENDING:
-            return QiskitJobStatus.INITIALIZING
-        if mqp_status == JobStatus.WAITING:
-            return QiskitJobStatus.QUEUED
-        if mqp_status == JobStatus.CANCELLED:
-            return QiskitJobStatus.CANCELLED
-        if mqp_status == JobStatus.FAILED:
-            return QiskitJobStatus.ERROR
-        if mqp_status == JobStatus.COMPLETED:
-            return QiskitJobStatus.DONE
+        if mqp_status == MQPJobStatus.PENDING:
+            return JobStatus.INITIALIZING
+        if mqp_status == MQPJobStatus.WAITING:
+            return JobStatus.QUEUED
+        if mqp_status == MQPJobStatus.CANCELLED:
+            return JobStatus.CANCELLED
+        if mqp_status == MQPJobStatus.FAILED:
+            return JobStatus.ERROR
+        if mqp_status == MQPJobStatus.COMPLETED:
+            return JobStatus.DONE
         raise RuntimeWarning(f"Unknown job status: {mqp_status}.")
 
-    def result(self):
-        """Return the result of the job
+    def result(self) -> Result:
+        """Return the result for the job
 
         Returns:
-            Result: Result object
+            [Result](https://qiskit.org/documentation/stubs/qiskit.result.Result.html)
+            object for the job.
         """
         res = self.client.wait_for_result(self.job_id())
         if isinstance(res.counts, list):

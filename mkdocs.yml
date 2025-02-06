@@ -1,0 +1,83 @@
+site_name: MQP Qiskit Provider Documentation
+
+docs_dir: "docs"
+site_dir: build/docs/site
+use_directory_urls: true
+dev_addr: "0.0.0.0:8000"
+watch:
+  - docs
+  - mkdocs.yml
+
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Getting Started: user_guide/getting_started.md
+    - Development Guide: user_guide/development_guide.md
+  - API Documentation:
+      - MQPProvider: api/mqp_provider.md
+      - MQPBackend: api/mqp_backend.md
+      - MQPJob: api/mqp_job.md
+  - Change Log: CHANGELOG.md
+
+
+theme:
+  name: material
+  logo: img/mqss_logo_white.svg
+  palette:
+    # Light Mode
+    - scheme: default
+      toggle:
+        icon: material/lightbulb-night-outline
+        name: Light mode
+      primary: custom
+      accent: deep purple
+
+    # Dark Mode
+    - scheme: slate
+      toggle:
+        icon: material/lightbulb-on-outline
+        name: Dark mode
+      primary: indigo
+      accent: deep orange
+  features:
+  - content.code.copy
+  - navigation.instant
+  - navigation.footer
+
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: false
+            separate_signature: true
+            show_if_no_docstring: false
+            show_root_full_path: true
+            show_signature_annotations: true
+  - autorefs
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+
+extra_css:
+  - css/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Munich-Quantum-Software-Stack/MQP-Qiskit-Provider
+    - icon: fontawesome/solid/envelope
+      link: mailto:mqss@munich-quantum-valley.de
+
+copyright: Copyright &copy; 2025 MQV

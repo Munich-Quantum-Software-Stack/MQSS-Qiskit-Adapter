@@ -10,11 +10,10 @@ from .backend import MQPBackend
 
 
 class MQPProvider(ProviderV1):
-    """MQP Qiskit Provider Class
+    """MQPProvider is a Qiskit Provider class that allows users to access MQP backends.
 
     Args:
         token (str): MQP token
-        url (str, optional): MQP URL
     """
 
     def __init__(self, token: str, url: Optional[str] = None) -> None:
@@ -25,13 +24,16 @@ class MQPProvider(ProviderV1):
             self._client = MQPClient(token=token)
 
     def get_backend(self, name=None, **kwargs) -> MQPBackend:
-        """Return a backend by name (deprecated since Qiskit v1.1, use backends instead)
+        """Return a backend by name
+
+        Warning:
+            Deprecated since Qiskit v1.1, use backends instead
 
         Args:
             name (str): name of the backend
 
         Returns:
-            MQPBackend: backend instance
+            A backend instance
         """
 
         warn(
@@ -39,17 +41,18 @@ class MQPProvider(ProviderV1):
             DeprecationWarning,
             stacklevel=2,
         )
+
         return MQPBackend(name, self._client, **kwargs)
 
     def backends(self, name=None, online_backends=False, **kwargs) -> List[MQPBackend]:
-        """Return a list of available backends
+        """Return a list of all available backends
 
         Args:
             name (str): name of the backend to return
-            online_backends (bool): return only online backends (default: False)
+            online_backends (bool): return only online backends
 
         Returns:
-            list[MQPBackend]: list of backend instances
+            List of backend instances
         """
         resources = self._client.resources()
         if resources is None:

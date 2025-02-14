@@ -1,8 +1,8 @@
 
 [project]
 name = "mqp-qiskit-provider"
-version = "0.1.5"
-description = ""
+version = "0.1.6"
+description = "A provider for Qiskit interface to MQP."
 authors = [
     {name = "mqss", email = "mqss@munich-quantum-valley.de"},
 ]

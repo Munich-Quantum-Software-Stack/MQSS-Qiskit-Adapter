@@ -3,7 +3,19 @@
 from mqp_client import ResourceInfo  # type: ignore
 from qiskit.circuit.library import Measure  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
-from qiskit.circuit.library import CZGate, IGate, RGate, RXXGate, RZGate  # type: ignore
+from qiskit.circuit.library import (  # type: ignore
+    CXGate,
+    CZGate,
+    HGate,
+    IGate,
+    RGate,
+    RXXGate,
+    RYGate,
+    RZGate,
+    XGate,
+    YGate,
+    ZGate,
+)
 from qiskit.circuit.parameter import Parameter  # type: ignore
 from qiskit.transpiler import CouplingMap, Target  # type: ignore
 
@@ -27,22 +39,90 @@ def get_target(resource_info: ResourceInfo):
 
     if resource_info is not None and resource_info.instructions is not None:
         assert target is not None
+
         for _instruction, _connections in resource_info.instructions:
-            if _instruction == "r":
-                target.add_instruction(
-                    RGate(Parameter("theta"), Parameter("phi")), _connections
-                )
-            if _instruction == "id":
-                target.add_instruction(IGate(), _connections)
-            if _instruction == "cz":
-                target.add_instruction(CZGate(), _connections)
-            if _instruction == "rz":
-                target.add_instruction(RZGate(Parameter("lambda")), _connections)
-            if _instruction == "rx":
-                target.add_instruction(RXGate(Parameter("theta")), _connections)
-            if _instruction == "rxx":
-                target.add_instruction(RXXGate(Parameter("theta")), _connections)
-            if _instruction == "measure":
-                target.add_instruction(Measure(), _connections)
+            target.add_instruction(instruction_map[_instruction](), _connections)
 
     return target
+
+
+def handle_r():
+    """Handle R gate"""
+    return RGate(Parameter("theta"), Parameter("phi"))
+
+
+def handle_id():
+    """Handle I gate"""
+    return IGate()
+
+
+def handle_cx():
+    """Handle CX gate"""
+    return CXGate()
+
+
+def handle_cz():
+    """Handle CZ gate"""
+    return CZGate()
+
+
+def handle_rxx():
+    """Handle RXX gate"""
+    return RXXGate(Parameter("theta"))
+
+
+def handle_rx():
+    """Handle RX gate"""
+    return RXGate(Parameter("theta"))
+
+
+def handle_ry():
+    """Handle RY gate"""
+    return RYGate(Parameter("theta"))
+
+
+def handle_rz():
+    """Handle RZ gate"""
+    return RZGate(Parameter("lambda"))
+
+
+def handle_h():
+    """Handle H gate"""
+    return HGate()
+
+
+def handle_x():
+    """Handle X gate"""
+    return XGate()
+
+
+def handle_y():
+    """Handle Y gate"""
+    return YGate()
+
+
+def handle_z():
+    """Handle Z gate"""
+    return ZGate()
+
+
+def handle_measure():
+    """Handle Measure gate"""
+    return Measure()
+
+
+instruction_map = {
+    "r": handle_r,
+    "id": handle_id,
+    "cz": handle_cz,
+    "rz": handle_rz,
+    "rx": handle_rx,
+    "rxx": handle_rxx,
+    "measure": handle_measure,
+    "cx": handle_cx,
+    "ry": handle_ry,
+    "h": handle_h,
+    "x": handle_x,
+    "y": handle_y,
+    "z": handle_z,
+}

@@ -94,6 +94,14 @@ transpiled_circuit = compiler.transpile(circuit, backend, optimization_level=3)
 job = backend.run(transpiled_circuit, shots=1000, no_modify=True)
 ```
 
+### Checking the Number of Pending Jobs on a Backend
+
+To determine if a backend is overloaded, you can check the number of pending jobs using the `num_pending_jobs` property.
+
+```python
+print("Number of pending jobs:", backend.num_pending_jobs)
+```
+
 ### Queuing a Job when Backend is Offline
 
 By default, a job scheduled on a backend with an offline status will be cancelled. To queue a job on an offline backend, use the `queued=True` flag. This will ensure that the job is enqueued and will be executed once the backend becomes available.

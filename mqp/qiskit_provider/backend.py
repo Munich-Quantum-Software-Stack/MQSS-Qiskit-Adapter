@@ -77,7 +77,7 @@ class MQPBackend(BackendV2):
 
     @property
     def num_pending_jobs(self) -> int:
-        """Returns the number of jobs waiting to be schedules on the backend
+        """Returns the number of jobs waiting to be scheduled on the backend
 
         Returns:
             Number of pending jobs

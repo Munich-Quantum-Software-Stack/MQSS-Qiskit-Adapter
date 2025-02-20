@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.1.6
+
+- Added the option to queue a job when backend is offline
+- Added some more instructions to target as new backends are integrated
+
 ## Version 0.1.5
 
 - Added `qasm3` flag to the backend to send circuit as QASM3 when set

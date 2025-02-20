@@ -94,6 +94,16 @@ transpiled_circuit = compiler.transpile(circuit, backend, optimization_level=3)
 job = backend.run(transpiled_circuit, shots=1000, no_modify=True)
 ```
 
+### Queuing a Job when Backend is Offline
+
+By default, a job scheduled on a backend with an offline status will be cancelled. To queue a job on an offline backend, use the `queued=True` flag. This will ensure that the job is enqueued and will be executed once the backend becomes available.
+
+!!! Note "The job is queued for limited time and cancelled if the backend is still offline."
+
+```python
+job = backend.run(circuit, shots=1000, queued=True)
+```
+
 ### Monitor Job Status
 
 You can check the status of your job as follows. The status indicates the current stage (e.g., QUEUED, INITIALIZING, DONE).

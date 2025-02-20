@@ -38,7 +38,11 @@ class MQPBackend(BackendV2):
     @classmethod
     def _default_options(cls) -> Options:
         return Options(
-            shots=1024, qubit_mapping=None, calibration_set_id=None, no_modify=False
+            shots=1024,
+            qubit_mapping=None,
+            calibration_set_id=None,
+            no_modify=False,
+            queued=False,
         )
 
     @property
@@ -73,7 +77,7 @@ class MQPBackend(BackendV2):
 
     @property
     def num_pending_jobs(self) -> int:
-        """Returns the number of jobs waiting to be schedules on the backend
+        """Returns the number of jobs waiting to be scheduled on the backend
 
         Returns:
             Number of pending jobs
@@ -86,6 +90,7 @@ class MQPBackend(BackendV2):
         shots: int = 1024,
         no_modify: bool = False,
         qasm3: bool = False,
+        queued: bool = False,
         **options,
     ) -> MQPJob:
         """Submit a circuit/batch of circuits to the backend
@@ -95,6 +100,7 @@ class MQPBackend(BackendV2):
             shots (int): number of shots
             no_modify (bool): do not modify/transpile the circuit
             qasm3 (bool): use QASM3 format to send the circuit
+            queued (bool): enqueue (for limited time) the job while backend is offline
 
         Returns:
             An instance of MQPJob
@@ -118,5 +124,6 @@ class MQPBackend(BackendV2):
             circuit_format=_circuit_format,
             shots=shots,
             no_modify=no_modify,
+            queued=queued,
         )
         return MQPJob(self.client, job_id)

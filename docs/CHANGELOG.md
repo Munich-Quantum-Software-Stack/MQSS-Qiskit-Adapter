@@ -1,5 +1,10 @@
 # Changelog
 
+## Version 0.1.7
+
+- Fixed KeyError bug when getting target instructions for a resource
+- Add contact us page to docs
+
 ## Version 0.1.6
 
 - Added the option to queue a job when backend is offline

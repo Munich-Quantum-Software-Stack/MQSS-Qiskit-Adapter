@@ -19,6 +19,7 @@ nav:
       - MQPBackend: api/mqp_backend.md
       - MQPJob: api/mqp_job.md
   - Change Log: CHANGELOG.md
+  - Contact: contact.md
 
 
 theme:
@@ -78,6 +79,6 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/Munich-Quantum-Software-Stack/MQP-Qiskit-Provider
     - icon: fontawesome/solid/envelope
-      link: mailto:mqss@munich-quantum-valley.de
+      link: mailto:quantum@lrz.de
 
 copyright: Copyright &copy; 2025 MQV

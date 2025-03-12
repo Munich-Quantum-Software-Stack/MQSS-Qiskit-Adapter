@@ -41,7 +41,12 @@ def get_target(resource_info: ResourceInfo):
         assert target is not None
 
         for _instruction, _connections in resource_info.instructions:
-            target.add_instruction(instruction_map[_instruction](), _connections)
+            try:
+                target.add_instruction(instruction_map[_instruction](), _connections)
+            except KeyError:
+                print(
+                    f"Warning: Instruction '{_instruction}' not found in the instruction_map."
+                )
 
     return target
 

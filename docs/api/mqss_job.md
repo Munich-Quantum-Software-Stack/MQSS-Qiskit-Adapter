@@ -1,3 +1,3 @@
-# MQPJob
+# MQSSQiskitJob
 
-::: mqp.qiskit_adapter.job.MQPJob
+::: mqss.qiskit_adapter.job.MQSSQiskitJob

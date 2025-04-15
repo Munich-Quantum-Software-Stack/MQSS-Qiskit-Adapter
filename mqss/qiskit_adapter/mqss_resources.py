@@ -1,4 +1,4 @@
-"""MQP Resources"""
+"""MQSS Resources"""
 
 from mqss_client import ResourceInfo  # type: ignore
 from qiskit.circuit.library import Measure  # type: ignore

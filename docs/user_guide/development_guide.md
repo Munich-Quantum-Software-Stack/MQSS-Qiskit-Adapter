@@ -51,7 +51,7 @@ To publish the documentation on GitHub Pages, follow these steps:
 **Install MkDocs and the Material theme:**
 
 ```sh
-uv sync -G docs
+uv sync
 ```
 
 **Build the documentation:**
@@ -72,7 +72,7 @@ uv run mkdocs serve
 **Deploy the documentation to GitHub Pages:**
 
 ```sh
-uv run mkdocs gh-deploy --remote-name git@github.com:Munich-Quantum-Software-Stack/MQP-Qiskit-Provider-Documentation.git --remote-branch gh-pages
+uv run mkdocs gh-deploy --remote-name git@github.com:Munich-Quantum-Software-Stack/MQSS-Qiskit-Adapter.git --remote-branch gh-pages
 ```
 
 This will create a new branch named `gh-pages` in your repository and deploy the documentation to

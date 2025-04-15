@@ -1,6 +1,6 @@
 """MQP Resources"""
 
-from mqp_client import ResourceInfo  # type: ignore
+from mqss_client import ResourceInfo  # type: ignore
 from qiskit.circuit.library import Measure  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore

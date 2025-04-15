@@ -1,12 +1,12 @@
-"""Mock class for MQPClient"""
+"""Mock class for MQSSClient"""
 
 from typing import Dict, Optional
 
-from mqp_client import ResourceInfo  # type: ignore
+from mqss_client import ResourceInfo  # type: ignore
 
 
-class MockMQPClient:
-    """Mock MQPClient class"""
+class MockMQSSClient:
+    """Mock MQSSClient class"""
 
     def get_resource_info(self, name: str) -> Optional[ResourceInfo]:
         """Return the resource info"""
@@ -18,7 +18,7 @@ class MockMQPClient:
             return get_resource_info_offline()
         return None
 
-    def resources(self) -> Optional[Dict[str, ResourceInfo]]:
+    def get_all_resources(self) -> Optional[Dict[str, ResourceInfo]]:
         """Return the resources"""
         # return get_resource_info_cmap() as dict to simulate the response from the server
 

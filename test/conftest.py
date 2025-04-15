@@ -1,19 +1,21 @@
-""""Nodule to define fixtures for the tests"""
+"""Module to define fixtures for the tests"""
 
 import pytest
 
-from .mocks import MockMQPClient
+from .mocks import MockMQSSClient
 
 
 @pytest.fixture
 def _mock_resource_info(monkeypatch):
-    """Mock the resource info"""
+    """Mock the get_resource_info"""
     monkeypatch.setattr(
-        "mqp_client.MQPClient.get_resource_info", MockMQPClient.get_resource_info
+        "mqss_client.MQSSClient.get_resource_info", MockMQSSClient.get_resource_info
     )
 
 
 @pytest.fixture
 def _mock_resources(monkeypatch):
-    """Mock the resources"""
-    monkeypatch.setattr("mqp_client.MQPClient.resources", MockMQPClient.resources)
+    """Mock the get_all_resources"""
+    monkeypatch.setattr(
+        "mqss_client.MQSSClient.get_all_resources", MockMQSSClient.get_all_resources
+    )

@@ -1,4 +1,4 @@
-site_name: MQP Qiskit Provider Documentation
+site_name: MQSS Qiskit Adapter Documentation
 
 docs_dir: "docs"
 site_dir: build/docs/site
@@ -8,19 +8,17 @@ watch:
   - docs
   - mkdocs.yml
 
-
 nav:
   - Home: index.md
   - User Guide:
-    - Getting Started: user_guide/getting_started.md
-    - Development Guide: user_guide/development_guide.md
+      - Getting Started: user_guide/getting_started.md
+      - Development Guide: user_guide/development_guide.md
   - API Documentation:
-      - MQPProvider: api/mqp_provider.md
-      - MQPBackend: api/mqp_backend.md
-      - MQPJob: api/mqp_job.md
+      - MQSSQiskitAdapter: api/mqss_adapter.md
+      - MQSSQiskitBackend: api/mqss_backend.md
+      - MQSSQiskitJob: api/mqss_job.md
   - Change Log: CHANGELOG.md
-  - Contact: contact.md
-
+  - Contact Us: contact.md
 
 theme:
   name: material
@@ -42,10 +40,9 @@ theme:
       primary: indigo
       accent: deep orange
   features:
-  - content.code.copy
-  - navigation.instant
-  - navigation.footer
-
+    - content.code.copy
+    - navigation.instant
+    - navigation.footer
 
 plugins:
   - search
@@ -77,7 +74,7 @@ extra_css:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Munich-Quantum-Software-Stack/MQP-Qiskit-Provider
+      link: https://github.com/Munich-Quantum-Software-Stack/MQSS-Qiskit-Adapter
     - icon: fontawesome/solid/envelope
       link: mailto:quantum@lrz.de
 

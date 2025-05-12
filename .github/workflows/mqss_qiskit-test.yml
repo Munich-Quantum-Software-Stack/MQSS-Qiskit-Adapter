@@ -36,5 +36,7 @@ jobs:
           uv run pre-commit install
           uv run pre-commit run --all-files
       - name: Test and Lint
+        env:
+          MQP_TOKEN: ${{ secrets.MQP_TOKEN }}
         run: |
           nox --session test

@@ -1,3 +1,21 @@
+# ------------------------------------------------------------------------------
+# Copyright 2024 Munich Quantum Software Stack Project
+#
+# Licensed under the Apache License, Version 2.0 with LLVM Exceptions (the
+# "License"); you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# https://github.com/Munich-Quantum-Software-Stack/QDMI/blob/develop/LICENSE
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+# License for the specific language governing permissions and limitations under
+# the License.
+#
+# SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+# ------------------------------------------------------------------------------
+
 """MQSS Backend Module"""
 
 from typing import List, Optional, Union
@@ -38,6 +56,9 @@ class MQSSQiskitBackend(BackendV2):
         if _resource_info is not None:
             self._coupling_map = get_coupling_map(_resource_info)
             self._target = get_target(_resource_info)
+
+        if self.name is not None and _resource_info is None:
+            raise ValueError(f"{self.name} is not available. ")
 
     @classmethod
     def _default_options(cls) -> Options:
@@ -92,6 +113,7 @@ class MQSSQiskitBackend(BackendV2):
         self,
         run_input: Union[QuantumCircuit, List[QuantumCircuit]],
         shots: int = 1024,
+        *,
         no_modify: bool = False,
         qasm3: bool = True,
         queued: bool = False,

@@ -25,9 +25,7 @@ from qiskit.providers import JobStatus as QiskitJobStatus  # type: ignore
 
 from mqss.qiskit_adapter import MQSSQiskitAdapter, MQSSQiskitBackend, MQSSQiskitJob
 
-from .conftest import (
-    TEST_BACKEND,
-)
+from .conftest import BACKENDS
 
 
 class TestMQSSQiskitBackend:
@@ -37,15 +35,26 @@ class TestMQSSQiskitBackend:
     def mqss_backend(self, mqss_adapter):
         """Setup MQSSQiskitBackend for tests."""
         assert mqss_adapter is not None
-        [mqss_backend] = mqss_adapter.backends(name=TEST_BACKEND, online=True)
-        return mqss_backend
+        all_backend = mqss_adapter.backends()
+        backend_set = [backend for backend in all_backend if backend.name in BACKENDS]
+        return backend_set[0] if backend_set else None
+
+    @pytest.fixture
+    def mqss_backend_online(self, mqss_adapter):
+        """Setup MQSSQiskitBackend for tests."""
+        assert mqss_adapter is not None
+        online_backends = mqss_adapter.backends(online=True)
+        online_backend_set = [
+            backend for backend in online_backends if backend.name in BACKENDS
+        ]
+        return online_backend_set[0] if online_backend_set else None
 
     @pytest.mark.backend
     def test_init(self, mqss_backend):
         """Test the MQSSQiskitBackend"""
         assert mqss_backend.client is not None
         assert isinstance(mqss_backend.client, MQSSClient)
-        assert mqss_backend.name == TEST_BACKEND
+        assert mqss_backend.name in BACKENDS
 
     @pytest.mark.backend
     def test_transpiler(self, mqss_adapter, test_circuit):
@@ -64,12 +73,15 @@ class TestMQSSQiskitBackend:
             assert transpiled_circuit is not None
 
     @pytest.mark.job
-    def test_run_job(self, mqss_backend, test_circuit):
+    @pytest.mark.skipif(
+        condition=mqss_backend_online is None, reason="No online backend"
+    )
+    def test_run_job(self, mqss_backend_online, test_circuit):
         """Test the MQSSQiskitBackend run job"""
-        assert mqss_backend is not None
-        assert isinstance(mqss_backend, MQSSQiskitBackend)
+        assert mqss_backend_online is not None
+        assert isinstance(mqss_backend_online, MQSSQiskitBackend)
 
-        job = mqss_backend.run(test_circuit, shots=100)
+        job = mqss_backend_online.run(test_circuit, shots=100)
         assert job is not None
         assert isinstance(job, MQSSQiskitJob)
         result = job.result().get_counts()
@@ -78,12 +90,15 @@ class TestMQSSQiskitBackend:
         assert job.status() == QiskitJobStatus.DONE
 
     @pytest.mark.job
-    def test_run_job_batch(self, mqss_backend, test_circuit_batch):
+    @pytest.mark.skipif(
+        condition=mqss_backend_online is None, reason="No online backend"
+    )
+    def test_run_job_batch(self, mqss_backend_online, test_circuit_batch):
         """Test the MQSSQiskitBackend run job batch"""
-        assert mqss_backend is not None
-        assert isinstance(mqss_backend, MQSSQiskitBackend)
+        assert mqss_backend_online is not None
+        assert isinstance(mqss_backend_online, MQSSQiskitBackend)
 
-        job = mqss_backend.run(test_circuit_batch, shots=100)
+        job = mqss_backend_online.run(test_circuit_batch, shots=100)
         assert job is not None
         assert isinstance(job, MQSSQiskitJob)
         assert len(job.result().get_counts()) == len(test_circuit_batch)
@@ -93,16 +108,19 @@ class TestMQSSQiskitBackend:
         assert job.status() == QiskitJobStatus.DONE
 
     @pytest.mark.job
-    def test_run_job_transpiled(self, mqss_backend, test_circuit):
+    @pytest.mark.skipif(
+        condition=mqss_backend_online is None, reason="No online backend"
+    )
+    def test_run_job_transpiled(self, mqss_backend_online, test_circuit):
         """Test the MQSSQiskitBackend run job transpiled"""
-        assert mqss_backend is not None
-        assert isinstance(mqss_backend, MQSSQiskitBackend)
+        assert mqss_backend_online is not None
+        assert isinstance(mqss_backend_online, MQSSQiskitBackend)
 
         transpiled_circuit = compiler.transpile(
-            test_circuit, mqss_backend, optimization_level=3
+            test_circuit, mqss_backend_online, optimization_level=3
         )
         assert transpiled_circuit is not None
-        job = mqss_backend.run(transpiled_circuit, shots=100, no_modify=True)
+        job = mqss_backend_online.run(transpiled_circuit, shots=100, no_modify=True)
         assert job is not None
         assert isinstance(job, MQSSQiskitJob)
         result = job.result().get_counts()
@@ -111,12 +129,15 @@ class TestMQSSQiskitBackend:
         assert job.status() == QiskitJobStatus.DONE
 
     @pytest.mark.job
-    def test_run_job_qasm3(self, mqss_backend, test_circuit):
+    @pytest.mark.skipif(
+        condition=mqss_backend_online is None, reason="No online backend"
+    )
+    def test_run_job_qasm3(self, mqss_backend_online, test_circuit):
         """Test the MQSSQiskitBackend run job with QASM3"""
-        assert mqss_backend is not None
-        assert isinstance(mqss_backend, MQSSQiskitBackend)
+        assert mqss_backend_online is not None
+        assert isinstance(mqss_backend_online, MQSSQiskitBackend)
 
-        job = mqss_backend.run(test_circuit, shots=100, qasm3=True)
+        job = mqss_backend_online.run(test_circuit, shots=100, qasm3=True)
         assert job is not None
         assert isinstance(job, MQSSQiskitJob)
         result = job.result().get_counts()

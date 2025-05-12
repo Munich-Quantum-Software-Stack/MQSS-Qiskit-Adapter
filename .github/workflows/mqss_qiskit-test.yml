@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test-backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -39,4 +39,33 @@ jobs:
         env:
           MQP_TOKEN: ${{ secrets.MQP_TOKEN }}
         run: |
-          nox --session test
+          nox --session test_backend
+
+  test-job:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install nox
+          pip install uv
+          uv sync
+      - name: Run pre-commit
+        run: |
+          uv run pre-commit install
+          uv run pre-commit run --all-files
+      - name: Test and Lint
+        env:
+          MQP_TOKEN: ${{ secrets.MQP_TOKEN }}
+        run: |
+          nox --session test_job

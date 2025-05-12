@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -8,32 +8,70 @@ repos:
       - id: check-toml
       - id: detect-private-key
       - id: trailing-whitespace
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+  # Handling unwanted unicode characters
+  - repo: https://github.com/sirosen/texthooks
+    rev: 0.6.8
+    hooks:
+      - id: fix-ligatures
+      - id: fix-smartquotes
+
+  # Check for common mistakes
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: rst-backticks
+      - id: rst-directive-colons
+      - id: rst-inline-touching-normal
+
+  # Check for spelling
+  - repo: https://github.com/crate-ci/typos
+    rev: v1.29.4
+    hooks:
+      - id: typos
+
+  # Format configuration files with prettier
+  - repo: https://github.com/rbubley/mirrors-prettier
+    rev: v3.4.2
+    hooks:
+      - id: prettier
+        types_or: [yaml, markdown, html, css, scss, javascript, json]
+        args:
+          - --print-width=100
+          - --prose-wrap=always
+          - --tab-width=2
+        exclude: ^docs/header\.html$
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.9.10
+    hooks:
+      # Run the linter.
+      - id: ruff
+        types_or: [python, pyi]
+        args: [--fix]
+      # Run the formatter.
+      - id: ruff-format
+        types_or: [python, pyi]
+
   - repo: local
     hooks:
-      - id: black
-        name: black
-        entry: pdm run black mqp/
-        language: system
-        always_run: true
-        pass_filenames: false
-
       - id: isort
         name: isort
-        entry: pdm run isort mqp/
+        entry: uv run isort mqss/ test/
         language: system
         always_run: true
         pass_filenames: false
 
       - id: mypy
         name: mypy
-        entry: pdm run python -m mypy mqp/
-        language: system
-        always_run: true
-        pass_filenames: false
-
-      - id: pylint
-        name: pylint
-        entry: pdm run python -m pylint mqp/
+        entry: uv run python -m mypy mqss/ test/
         language: system
         always_run: true
         pass_filenames: false

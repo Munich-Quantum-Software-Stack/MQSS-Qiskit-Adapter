@@ -1,34 +1,27 @@
 import nox
-import os
+
 from nox.sessions import Session
 
-os.environ.update({"PDM_IGNORE_SAVED_PYTHON": "1"})
 
-SRC_DIR = "mqp"
-TEST_DIR = "test"
-
-pylint_args = []
-mypy_args = []
-
-
-@nox.session(reuse_venv=True)
-def test(session: Session):
-    session.run("pdm", "install", "-G:all", external=True)
-    session.run("pytest", "-v", "-s")
-    # session.run("coverage", "run", f"--source={SRC_DIR}", "-m", "pytest")
-    # session.run("coverage", "report", "-m")
+@nox.session(python=False)
+@nox.parametrize(
+    "qiskit", ["0.46.3", "1.0.2", "1.1.2", "1.2.4", "1.3.3", "1.4.2", "2.0.0"]
+)
+def test_backend(session: Session, qiskit: str) -> None:
+    """Run the tests with different Qiskit versions."""
+    session.run("rm", "-rf", ".venv", external=True)
+    session.run("uv", "lock", "--upgrade-package", f"qiskit=={qiskit}", external=True)
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "pytest", "-v", "-s", "-m", "backend", external=True)
 
 
-@nox.session(reuse_venv=True)
-def lint(session: Session):
-    session.run("pdm", "install", "-G:all", external=True)
-    session.run("pylint", SRC_DIR, TEST_DIR, *pylint_args)
-    session.run("black", "--check", SRC_DIR, TEST_DIR)
-    session.run("isort", "--check", SRC_DIR, TEST_DIR)
-
-
-@nox.session(reuse_venv=True)
-def typecheck(session: Session):
-    session.run("pdm", "install", "-G:all", external=True)
-    session.run("mypy", SRC_DIR, *mypy_args)
-    session.run("mypy", TEST_DIR, *mypy_args)
+@nox.session(python=False)
+@nox.parametrize(
+    "qiskit", ["0.46.3", "1.0.2", "1.1.2", "1.2.4", "1.3.3", "1.4.2", "2.0.0"]
+)
+def test_job(session: Session, qiskit: str) -> None:
+    """Run the tests with different Qiskit versions."""
+    session.run("rm", "-rf", ".venv", external=True)
+    session.run("uv", "lock", "--upgrade-package", f"qiskit=={qiskit}", external=True)
+    session.run("uv", "sync", external=True)
+    session.run("uv", "run", "pytest", "-v", "-s", "-m", "job", external=True)

@@ -6,6 +6,17 @@ description = "MQSS adapter for Qiskit as an interface to MQP and HPCQC."
 authors = [
     {name = "mqss", email = "mqss@munich-quantum-valley.de"},
 ]
+keywords = ["MQSS", "quantum-computing", "Qiskit"]
+classifiers = [
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "qiskit>=0.45",
     "requests>=2.32.3",

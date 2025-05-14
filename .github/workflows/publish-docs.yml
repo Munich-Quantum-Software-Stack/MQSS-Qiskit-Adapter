@@ -28,15 +28,24 @@ jobs:
         run: |
           uv run mkdocs build
 
-      - name: Update docs on MQSS Interfaces repository
+      - name: Checkout MQSS Interfaces repository
         run: |
+          git clone https://x-access-token:${{ secrets.MQSS_INTERFACES_DOCS_TOKEN }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
           git remote set-url origin https://x-access-token:${{ secrets.MQSS_INTERFACES_DOCS_TOKEN }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
+          cd MQSS-Interfaces
+          git checkout gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull origin gh-pages
+      - name: Copy documentation to MQSS Interfaces repository
+        run: |
           cd MQSS-Interfaces
           rm -rf qiskit/*
           mkdir -p qiskit/
           cp -r ../build/docs/site/* qiskit/
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Commit and push changes to MQSS Interfaces repository
+        run: |
+          cd MQSS-Interfaces
           git add .
           git commit -m "Update MQSS Qiskit Adapter docs from GitHub Action" || echo "No changes to commit"
           git push origin gh-pages

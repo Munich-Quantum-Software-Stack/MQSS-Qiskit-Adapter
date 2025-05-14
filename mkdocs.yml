@@ -9,6 +9,8 @@ watch:
   - mkdocs.yml
 
 nav:
+  - MQSS Interfaces: https://munich-quantum-software-stack.github.io/MQSS-Interfaces/
+  - MQSSI Home: ../
   - Home: index.md
   - User Guide:
       - Getting Started: user_guide/getting_started.md

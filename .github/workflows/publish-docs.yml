@@ -38,9 +38,9 @@ jobs:
 
       - name: Copy documentation to MQSS Interfaces repository
         run: |
-          rm -rf ../MQSS-Interfaces/qiskit/*
+          rm -rf MQSS-Interfaces/qiskit/*
           mkdir -p MQSS-Interfaces/qiskit/
-          cp -r build/docs/site/* ../MQSS-Interfaces/qiskit/
+          cp -r build/docs/site/* MQSS-Interfaces/qiskit/
 
       - name: Commit and push changes
         run: |

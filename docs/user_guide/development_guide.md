@@ -18,7 +18,7 @@ Qiskit. The main components of the project are:
 
 Before you start developing, ensure you have the following installed:
 
-- Python 3.8 to 3.11
+- Python 3.9 to 3.13
 - [`uv`](https://docs.astral.sh/uv/) package manager for python
 
 ## Setting Up the Development Environment
@@ -44,9 +44,9 @@ To run the tests, use `pytest`:
 uv run pytest
 ```
 
-## Publishing Documentation on GitHub Pages
+## Building Documentation
 
-To publish the documentation on GitHub Pages, follow these steps:
+To build the documentation, follow these steps:
 
 **Install MkDocs and the Material theme:**
 
@@ -60,7 +60,7 @@ uv sync
 uv run mkdocs build
 ```
 
-**View documentation locally**
+**Local deployment**
 
 Run the following and browse the documentation locally at:
 [http://localhost:8000](http://localhost:8000)
@@ -68,12 +68,3 @@ Run the following and browse the documentation locally at:
 ```sh
 uv run mkdocs serve
 ```
-
-**Deploy the documentation to GitHub Pages:**
-
-```sh
-uv run mkdocs gh-deploy --remote-name git@github.com:Munich-Quantum-Software-Stack/MQSS-Qiskit-Adapter.git --remote-branch gh-pages
-```
-
-This will create a new branch named `gh-pages` in your repository and deploy the documentation to
-GitHub Pages.

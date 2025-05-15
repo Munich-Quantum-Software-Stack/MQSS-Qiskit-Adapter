@@ -31,7 +31,7 @@ qc.h(0)
 qc.cx(0, 1)
 qc.measure_all()
 
-# Get the right backend
+# Get the desired backend
 mqss_adapter = MQSSQiskitAdapter(token="<TOKEN>")
 [backend] = mqss_adapter.backends(name="<BACKEND_NAME>")
 
@@ -42,6 +42,8 @@ job = backend.run(qc, shots=100)
 print(job.result().get_counts())
 
 ```
+
+To get a token and see available backends visit [MQP](https://portal.quantum.lrz.de).
 
 ## Contributing
 

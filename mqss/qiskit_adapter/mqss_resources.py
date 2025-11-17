@@ -26,10 +26,12 @@ from qiskit.circuit.library import (  # type: ignore
     CZGate,
     HGate,
     IGate,
+    Reset,
     RGate,
     RXXGate,
     RYGate,
     RZGate,
+    SwapGate,
     XGate,
     YGate,
     ZGate,
@@ -136,6 +138,16 @@ def handle_measure():
     return Measure()
 
 
+def handle_reset():
+    """Handle Reset gate"""
+    return Reset()
+
+
+def handle_swap():
+    """Handle Swap gate"""
+    return SwapGate()
+
+
 instruction_map = {
     "r": handle_r,
     "id": handle_id,
@@ -150,4 +162,6 @@ instruction_map = {
     "x": handle_x,
     "y": handle_y,
     "z": handle_z,
+    "reset": handle_reset,
+    "swap": handle_swap,
 }

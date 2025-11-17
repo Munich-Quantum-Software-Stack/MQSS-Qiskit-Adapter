@@ -81,6 +81,26 @@ class MQSSQiskitJob(JobV1):
             res_counts = res.counts
         else:
             res_counts = [res.counts]
+        try:
+            if len(res.metrics.keys()) == 0:
+                profiler_metrics = {}
+            else:
+                profiler_metrics = {
+                    "mqp_api": res.metrics["API"],
+                    "qdb": res.metrics["QDB"],
+                    "qjr": res.metrics["QJR"],
+                    "isv_jr": res.metrics["ISV_JR"],
+                    "generator": res.metrics["Generator"],
+                    "scheduler": res.metrics["Scheduler"],
+                    "pass_runner": res.metrics["Pass_runner"],
+                    "transpiler": res.metrics["Transpiler"],
+                    "submitter": res.metrics["Submitter"],
+                    "pass_selection": res.metrics["Pass_selection"],
+                    "knitter": res.metrics["Knitter"],
+                    "job_execution": res.metrics["Job_execution"],
+                }
+        except Exception as e:
+            profiler_metrics = {}
         result_dict = {
             "backend_name": self.backend().name,
             "backend_version": None,
@@ -102,5 +122,6 @@ class MQSSQiskitJob(JobV1):
                 "scheduled": res.timestamp_scheduled,
                 "completed": res.timestamp_completed,
             },
+            "job_profiler_metrics": profiler_metrics,
         }
         return Result.from_dict(result_dict)

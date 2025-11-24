@@ -99,7 +99,7 @@ class MQSSQiskitJob(JobV1):
                     "knitter": res.metrics["Knitter"],
                     "job_execution": res.metrics["Job_execution"],
                 }
-        except Exception as e:
+        except Exception:
             profiler_metrics = {}
         result_dict = {
             "backend_name": self.backend().name,

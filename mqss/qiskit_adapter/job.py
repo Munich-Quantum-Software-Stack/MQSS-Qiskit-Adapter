@@ -75,6 +75,9 @@ class MQSSQiskitJob(JobV1):
         Returns:
             [Result](https://qiskit.org/documentation/stubs/qiskit.result.Result.html)
             object for the job.
+            Profiler metrics are included in the result if available.
+            Each components refers to the time taken (in milliseconds) by that component during
+            the job lifecycle.
         """
         res = self.client.wait_for_job_result(self.job_id(), self.job_request)
         if isinstance(res.counts, list):
@@ -86,18 +89,21 @@ class MQSSQiskitJob(JobV1):
                 profiler_metrics = {}
             else:
                 profiler_metrics = {
-                    "mqp_api": res.metrics["API"],
-                    "qdb": res.metrics["QDB"],
-                    "qjr": res.metrics["QJR"],
-                    "isv_jr": res.metrics["ISV_JR"],
-                    "generator": res.metrics["Generator"],
-                    "scheduler": res.metrics["Scheduler"],
-                    "pass_runner": res.metrics["Pass_runner"],
-                    "transpiler": res.metrics["Transpiler"],
-                    "submitter": res.metrics["Submitter"],
-                    "pass_selection": res.metrics["Pass_selection"],
-                    "knitter": res.metrics["Knitter"],
-                    "job_execution": res.metrics["Job_execution"],
+                    "mqp_api": res.metrics["mqp_api"],
+                    "quantum_database": res.metrics["quantum_database"],
+                    "quantum_job_runner": res.metrics["quantum_job_runner"],
+                    "isv_job_runner": res.metrics["isv_job_runner"],
+                    "quantum_daemon_job_runner": res.metrics[
+                        "quantum_daemon_job_runner"
+                    ],
+                    "generator": res.metrics["generator"],
+                    "scheduler": res.metrics["scheduler"],
+                    "pass_runner": res.metrics["pass_runner"],
+                    "transpiler": res.metrics["transpiler"],
+                    "submitter": res.metrics["submitter"],
+                    "pass_selection": res.metrics["pass_selection"],
+                    "knitter": res.metrics["knitter"],
+                    "job_execution": res.metrics["job_execution"],
                 }
         except Exception:
             profiler_metrics = {}

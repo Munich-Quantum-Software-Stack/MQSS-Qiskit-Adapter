@@ -160,3 +160,34 @@ print(result_dict["timestamps"]["submitted"])
 print(result_dict["timestamps"]["scheduled"])
 print(result_dict["timestamps"]["completed"])
 ```
+
+### Job Profiler Metrics
+
+When you run a job on this backend, you can inspect detailed profiler information that shows how
+long each internal component took to execute. These values are measured with **microsecond
+granularity** whenever available, and presented as **seconds**. Therefore, **1e-6** would mean **1
+microsecond**.
+
+```python
+print(result.job_profiler_metrics)
+```
+
+A typical output, with the comprehensive list of metrics returned.
+
+```python
+{
+    'mqp_api': '1e-06',
+    'quantum_database': None,
+    'quantum_job_runner': None,
+    'isv_job_runner': None,
+    'quantum_daemon_job_runner': None,
+    'generator': None,
+    'scheduler': None,
+    'pass_runner': None,
+    'transpiler': None,
+    'submitter': None,
+    'pass_selection': None,
+    'knitter': None,
+    'job_execution': None
+}
+```

@@ -20,7 +20,7 @@
 
 from typing import List, Optional, Union
 
-from mqss_client import CircuitJobRequest, MQSSClient, ResourceInfo  # type: ignore
+from mqss.client import MQSSClient, Resource, CircuitJobRequest # type: ignore
 from qiskit.circuit import QuantumCircuit  # type: ignore
 from qiskit.providers import BackendV2, Options  # type: ignore
 from qiskit.qasm2 import dumps as qasm2_str  # type: ignore
@@ -42,22 +42,20 @@ class MQSSQiskitBackend(BackendV2):
         self,
         client: MQSSClient,
         name: Optional[str] = None,
-        resource_info: Optional[ResourceInfo] = None,
+        resource: Optional[Resource] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
         self.name = name
         self.client = client
-        _resource_info = resource_info or (
-            self.client.get_resource_info(self.name) if name else None
-        )
+        resource =  resource or (self.client.resource(self.name)  if name else None)
         self._coupling_map = None
         self._target = None
-        if _resource_info is not None:
-            self._coupling_map = get_coupling_map(_resource_info)
-            self._target = get_target(_resource_info)
+        if resource is not None:
+            self._coupling_map = get_coupling_map(resource)
+            self._target = get_target(resource)
 
-        if self.name is not None and _resource_info is None:
+        if self.name is not None and resource is None:
             raise ValueError(f"{self.name} is not available. ")
 
     @classmethod
@@ -107,7 +105,7 @@ class MQSSQiskitBackend(BackendV2):
         Returns:
             Number of pending jobs
         """
-        return self.client.get_num_pending_jobs(self.name)
+        return self.client.pending_job_count(self.name)
 
     def run(
         self,
@@ -134,7 +132,7 @@ class MQSSQiskitBackend(BackendV2):
 
         if isinstance(run_input, QuantumCircuit):
             _circuits = (
-                str([qasm3_str(run_input)]) if qasm3 else str([qasm2_str(run_input)])
+                str(qasm3_str(run_input)) if qasm3 else str(qasm2_str(run_input))
             )
         else:
             _circuits = (
@@ -145,7 +143,7 @@ class MQSSQiskitBackend(BackendV2):
         _circuit_format = "qasm3" if qasm3 else "qasm"
 
         job_request = CircuitJobRequest(
-            circuits=_circuits,
+            circuit=_circuits,
             circuit_format=_circuit_format,
             resource_name=self.name,
             shots=shots,

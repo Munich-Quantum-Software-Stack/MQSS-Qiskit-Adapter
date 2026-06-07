@@ -21,9 +21,7 @@ This module defines the MQSSQiskitJob class, which extends Qiskit's JobV1 class 
 cancellation, status retrieval, and result fetching for MQSS backends using the MQSSClient.
 """
 
-from mqss_client import CircuitJobRequest  # type: ignore
-from mqss_client import MQSSClient  # type: ignore
-from mqss_client import JobStatus as MQSSJobStatus  # type: ignore
+from mqss.client import MQSSClient, CircuitJobRequest
 from qiskit.providers import JobStatus  # type: ignore
 from qiskit.providers import Backend, JobV1  # type: ignore
 from qiskit.result import Counts, Result  # type: ignore
@@ -56,16 +54,16 @@ class MQSSQiskitJob(JobV1):
             ([JobStatus](https://qiskit.org/documentation/stubs/qiskit.providers.JobStatus.html)).
 
         """
-        mqss_status = self.client.job_status(self.job_id(), self.job_request)
-        if mqss_status == MQSSJobStatus.PENDING:
+        mqss_status = self.client.job_status(self.job_request)
+        if mqss_status == "PENDING":
             return JobStatus.INITIALIZING
-        if mqss_status == MQSSJobStatus.WAITING:
+        if mqss_status == "WAITING":
             return JobStatus.QUEUED
-        if mqss_status == MQSSJobStatus.CANCELLED:
+        if mqss_status == "CANCELLED":
             return JobStatus.CANCELLED
-        if mqss_status == MQSSJobStatus.FAILED:
+        if mqss_status == "FAILED":
             return JobStatus.ERROR
-        if mqss_status == MQSSJobStatus.COMPLETED:
+        if mqss_status == "COMPLETED":
             return JobStatus.DONE
         raise RuntimeWarning(f"Unknown job status: {mqss_status}.")
 
@@ -76,11 +74,11 @@ class MQSSQiskitJob(JobV1):
             [Result](https://qiskit.org/documentation/stubs/qiskit.result.Result.html)
             object for the job.
         """
-        res = self.client.wait_for_job_result(self.job_id(), self.job_request)
-        if isinstance(res.counts, list):
-            res_counts = res.counts
+        res = self.client.job_results(self.job_request, True)
+        if isinstance(res.results, list):
+            res_counts = res.results
         else:
-            res_counts = [res.counts]
+            res_counts = [res.results]
         result_dict = {
             "backend_name": self.backend().name,
             "backend_version": None,

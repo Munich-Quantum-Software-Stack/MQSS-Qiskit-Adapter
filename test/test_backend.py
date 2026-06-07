@@ -19,7 +19,7 @@
 """Module to test the MQSS Qiskit Backend."""
 
 import pytest
-from mqss_client import MQSSClient  # type: ignore
+from mqss.client import MQSSClient  # type: ignore
 from qiskit import compiler  # type: ignore
 from qiskit.providers import JobStatus as QiskitJobStatus  # type: ignore
 

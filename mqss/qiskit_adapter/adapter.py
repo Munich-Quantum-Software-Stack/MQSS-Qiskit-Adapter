@@ -21,7 +21,7 @@
 import os
 from typing import List, Optional
 
-from mqss_client import MQSSClient  # type: ignore
+from mqss.client import MQSSClient  # type: ignore
 
 from .backend import MQSSQiskitBackend
 
@@ -39,18 +39,20 @@ class MQSSQiskitAdapter:
         self,
         token: str,
         *,
-        hpcqc: Optional[bool] = None,
-        base_url: Optional[str] = None,
+        hpcqc: Optional[bool] = False,
+        base_url: Optional[str] = "",
     ) -> None:
+        
         is_hpcqc_env = os.getenv("MQSS_HPCQC_ENV", "False").lower() in [
             "true",
             "1",
             "t",
         ]
         # hpcqc gets priority over the environment variable
+        
         self.client = MQSSClient(
             token=token,
-            base_url=base_url,
+            url_or_queue=base_url,
             is_hpc=hpcqc if hpcqc is not None else is_hpcqc_env,
         )
 
@@ -78,14 +80,14 @@ class MQSSQiskitAdapter:
         Returns:
             List[MQSSQiskitBackend]: List of backend instances
         """
-        resources = self.client.get_all_resources()
+        resources = self.client.resources
         if resources is None:
             return []
-        if name is not None and name not in resources:
+        if name is not None and not any([name==resource.name for resource in resources]):
             raise ValueError(f"{name} is not available. ")
         return [
-            MQSSQiskitBackend(self.client, _name, resources[_name])
-            for _name in resources
-            if (not online or resources[_name].online)
-            and (name is None or name == _name)
+            MQSSQiskitBackend(self.client, resource.name, resource)
+            for resource in resources
+            if (not online or resource.online)
+            and (name is None or name == resource.name)
         ]

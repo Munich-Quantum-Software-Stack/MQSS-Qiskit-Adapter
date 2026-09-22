@@ -32,7 +32,7 @@ except KeyError:
     print("set MQP_TOKEN to your MQP token in the environment.")
 
 # NOTE: change to current backend names
-BACKENDS = ["QExa20"]
+BACKENDS = ["EQE1"]
 URL = "https://portal.quantum.lrz.de:4000/v1/"
 
 

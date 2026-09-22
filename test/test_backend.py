@@ -19,11 +19,15 @@
 """Module to test the MQSS Qiskit Backend."""
 
 import pytest
-from mqss.client import MQSSClient  # type: ignore
 from qiskit import compiler  # type: ignore
 from qiskit.providers import JobStatus as QiskitJobStatus  # type: ignore
 
-from mqss.qiskit_adapter import MQSSQiskitAdapter, MQSSQiskitBackend, MQSSQiskitJob
+from mqss.client import MQSSClient  # type: ignore
+from mqss.qiskit_adapter import (  # type: ignore
+    MQSSQiskitAdapter,
+    MQSSQiskitBackend,
+    MQSSQiskitJob,
+)
 
 from .conftest import BACKENDS
 

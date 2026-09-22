@@ -42,14 +42,13 @@ class MQSSQiskitAdapter:
         hpcqc: Optional[bool] = False,
         base_url: Optional[str] = "",
     ) -> None:
-        
         is_hpcqc_env = os.getenv("MQSS_HPCQC_ENV", "False").lower() in [
             "true",
             "1",
             "t",
         ]
         # hpcqc gets priority over the environment variable
-        
+
         self.client = MQSSClient(
             token=token,
             url_or_queue=base_url,
@@ -83,7 +82,9 @@ class MQSSQiskitAdapter:
         resources = self.client.resources
         if resources is None:
             return []
-        if name is not None and not any([name==resource.name for resource in resources]):
+        if name is not None and not any(
+            [name == resource.name for resource in resources]
+        ):
             raise ValueError(f"{name} is not available. ")
         return [
             MQSSQiskitBackend(self.client, resource.name, resource)

@@ -20,12 +20,13 @@
 
 from typing import List, Optional, Union
 
-from mqss.client import MQSSClient, Resource, CircuitJobRequest # type: ignore
 from qiskit.circuit import QuantumCircuit  # type: ignore
 from qiskit.providers import BackendV2, Options  # type: ignore
 from qiskit.qasm2 import dumps as qasm2_str  # type: ignore
 from qiskit.qasm3 import dumps as qasm3_str  # type: ignore
 from qiskit.transpiler import CouplingMap, Target  # type: ignore
+
+from mqss.client import CircuitJobRequest, MQSSClient, Resource  # type: ignore
 
 from .job import MQSSQiskitJob
 from .mqss_resources import get_coupling_map, get_target
@@ -48,7 +49,7 @@ class MQSSQiskitBackend(BackendV2):
         super().__init__(**kwargs)
         self.name = name
         self.client = client
-        resource =  resource or (self.client.resource(self.name)  if name else None)
+        resource = resource or (self.client.resource(self.name) if name else None)
         self._coupling_map = None
         self._target = None
         if resource is not None:

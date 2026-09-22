@@ -18,7 +18,6 @@
 
 """MQP Resources"""
 
-from mqss.client import Resource # type: ignore
 from qiskit.circuit.library import Measure  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore
@@ -37,27 +36,31 @@ from qiskit.circuit.library import (  # type: ignore
 from qiskit.circuit.parameter import Parameter  # type: ignore
 from qiskit.transpiler import CouplingMap, Target  # type: ignore
 
+from mqss.client import Resource  # type: ignore
+
 
 def get_coupling_map(resource: Resource):
     """Return CouplingMap for the backend"""
 
     return (
         CouplingMap(couplinglist=resource.coupling_map)
-        if resource is not None and resource.coupling_map is not None and len(resource.coupling_map) != 0
+        if resource is not None
+        and resource.coupling_map is not None
+        and len(resource.coupling_map) != 0
         else None
     )
 
 
 def get_target(resource: Resource):
     """Return Target for the backend"""
-        
+
     if resource is None or not resource.native_gateset:
         return None
 
     target = Target(num_qubits=resource.qubit_count)
 
     for gate in resource.native_gateset:
-        connections = (
+        connections: dict[tuple[int, ...] | None, None] = (
             {None: None}
             if not gate.supported_qubits
             else {tuple(qubits): None for qubits in gate.supported_qubits}

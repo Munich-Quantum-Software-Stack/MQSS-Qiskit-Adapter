@@ -27,12 +27,12 @@ from mqss.qiskit_adapter import MQSSQiskitAdapter  # type: ignore
 
 TOKEN = None
 try:
-    TOKEN = os.environ["MQP_TOKEN"]
+    TOKEN = os.environ["MQSS_TOKEN"]
 except KeyError:
-    print("set MQP_TOKEN to your MQP token in the environment.")
+    print("set MQSS_TOKEN to your MQSS token in the environment.")
 
 # NOTE: change to current backend names
-BACKENDS = ["QExa20"]
+BACKENDS = ["EQE"]
 URL = "https://portal.quantum.lrz.de:4000"
 
 
@@ -49,6 +49,19 @@ def test_circuit():
     qc = QuantumCircuit(2)
     qc.h(0)
     qc.cx(0, 1)
+    qc.measure_all()
+    return qc
+
+
+@pytest.fixture
+def test_mid_circuit_measurements():
+    """Test circuit."""
+    qc = QuantumCircuit(1, 1)
+
+    qc.h(0)
+    qc.measure(0, 0)
+    with qc.if_test((qc.clbits[0], True)):
+        qc.x(0)
     qc.measure_all()
     return qc
 

@@ -19,17 +19,21 @@
 """MQP Resources"""
 
 from mqss_client import ResourceInfo  # type: ignore
-from qiskit.circuit.library import Measure  # type: ignore
+from qiskit.circuit import ClassicalRegister, QuantumCircuit  # type: ignore
+from qiskit.circuit.controlflow import IfElseOp  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore
     CXGate,
     CZGate,
     HGate,
     IGate,
+    Measure,
+    Reset,
     RGate,
     RXXGate,
     RYGate,
     RZGate,
+    SwapGate,
     XGate,
     YGate,
     ZGate,
@@ -136,6 +140,23 @@ def handle_measure():
     return Measure()
 
 
+def handle_reset():
+    """Handle reset instruction"""
+    return Reset()
+
+
+def handle_swap():
+    """Handle Swap gate"""
+    return SwapGate()
+
+
+def handle_if_else():
+    """Handle control-flow instruction for target construction."""
+    condition_register = ClassicalRegister(1, "condition")
+    true_body = QuantumCircuit(1)
+    return IfElseOp((condition_register, 0), true_body)
+
+
 instruction_map = {
     "r": handle_r,
     "id": handle_id,
@@ -144,10 +165,13 @@ instruction_map = {
     "rx": handle_rx,
     "rxx": handle_rxx,
     "measure": handle_measure,
+    "reset": handle_reset,
+    "if_else": handle_if_else,
     "cx": handle_cx,
     "ry": handle_ry,
     "h": handle_h,
     "x": handle_x,
     "y": handle_y,
     "z": handle_z,
+    "swap": handle_swap,
 }

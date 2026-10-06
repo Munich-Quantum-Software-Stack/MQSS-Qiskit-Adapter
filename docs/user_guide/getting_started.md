@@ -160,3 +160,27 @@ print(result_dict["timestamps"]["submitted"])
 print(result_dict["timestamps"]["scheduled"])
 print(result_dict["timestamps"]["completed"])
 ```
+
+### Mid-Circuit Measurements
+
+A classical measurement can control a later operation in the same circuit:
+
+```python
+circuit = QuantumCircuit(1, 1)
+circuit.h(0)
+circuit.measure(0, 0)  # Store the mid-circuit result in c0
+
+with circuit.if_test((circuit.clbits[0], True)):
+  circuit.x(0)  # Apply X only when c0 is 1
+
+circuit.measure_all()  # Store the final result in a new bit, c1
+```
+
+Qiskit displays classical bits from highest to lowest index, so the output is `c1 c0`: the left bit
+is the final measurement and the right bit is the mid-circuit measurement. For example:
+
+- `0 0`: the mid-circuit result was 0, so no X was applied; the final result was 0.
+- `0 1`: the mid-circuit result was 1, so X was applied; the final result was 0.
+
+An example result from 100 shots is `{'0 0': 54, '0 1': 40, '1 1': 6}`. The additional `1 1` results
+can be caused by noise or measurement errors on a real backend.

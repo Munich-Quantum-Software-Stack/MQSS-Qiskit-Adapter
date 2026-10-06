@@ -162,7 +162,6 @@ class TestMQSSQiskitBackend:
         assert job is not None
         assert isinstance(job, MQSSQiskitJob)
         result = job.result().get_counts()
-        print(result)
         assert result is not None
         assert isinstance(result, dict)
         assert job.status() == QiskitJobStatus.DONE

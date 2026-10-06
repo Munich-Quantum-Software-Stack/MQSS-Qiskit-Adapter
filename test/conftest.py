@@ -21,18 +21,21 @@
 import os
 
 import pytest
+from dotenv import load_dotenv
 from qiskit.circuit import QuantumCircuit  # type: ignore
 
 from mqss.qiskit_adapter import MQSSQiskitAdapter  # type: ignore
 
+load_dotenv()  # Load environment variables from .env file
 TOKEN = None
+
 try:
     TOKEN = os.environ["MQSS_TOKEN"]
 except KeyError:
     print("set MQSS_TOKEN to your MQSS token in the environment.")
 
 # NOTE: change to current backend names
-BACKENDS = ["EQE"]
+BACKENDS = ["EQE1"]
 URL = "https://portal.quantum.lrz.de:4000"
 
 
@@ -54,7 +57,7 @@ def test_circuit():
 
 
 @pytest.fixture
-def test_mid_circuit_measurements():
+def test_circuit_mid_circuit_measurements():
     """Test circuit."""
     qc = QuantumCircuit(1, 1)
 

@@ -144,3 +144,25 @@ class TestMQSSQiskitBackend:
         assert result is not None
         assert isinstance(result, dict)
         assert job.status() == QiskitJobStatus.DONE
+
+    @pytest.mark.job
+    @pytest.mark.skipif(
+        condition=mqss_backend_online is None, reason="No online backend"
+    )
+    def test_run_mid_circuit_measurements(
+        self, mqss_backend_online, test_circuit_mid_circuit_measurements
+    ):
+        """Test the MQSSQiskitBackend run job with QASM3"""
+        assert mqss_backend_online is not None
+        assert isinstance(mqss_backend_online, MQSSQiskitBackend)
+
+        job = mqss_backend_online.run(
+            test_circuit_mid_circuit_measurements, shots=100, qasm3=True
+        )
+        assert job is not None
+        assert isinstance(job, MQSSQiskitJob)
+        result = job.result().get_counts()
+        print(result)
+        assert result is not None
+        assert isinstance(result, dict)
+        assert job.status() == QiskitJobStatus.DONE

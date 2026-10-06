@@ -19,7 +19,6 @@
 """MQP Resources"""
 
 from mqss_client import ResourceInfo  # type: ignore
-from qiskit.circuit import ClassicalRegister, QuantumCircuit  # type: ignore
 from qiskit.circuit.controlflow import IfElseOp  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore
@@ -66,7 +65,11 @@ def get_target(resource_info: ResourceInfo):
 
         for _instruction, _connections in resource_info.instructions:
             try:
-                target.add_instruction(instruction_map[_instruction](), _connections)
+                instruction = instruction_map[_instruction]()
+                if isinstance(instruction, type):
+                    target.add_instruction(instruction, name=_instruction)
+                else:
+                    target.add_instruction(instruction, _connections)
             except KeyError:
                 print(
                     f"Warning: Instruction '{_instruction}' not found in the instruction_map."
@@ -152,9 +155,7 @@ def handle_swap():
 
 def handle_if_else():
     """Handle control-flow instruction for target construction."""
-    condition_register = ClassicalRegister(1, "condition")
-    true_body = QuantumCircuit(1)
-    return IfElseOp((condition_register, 0), true_body)
+    return IfElseOp
 
 
 instruction_map = {

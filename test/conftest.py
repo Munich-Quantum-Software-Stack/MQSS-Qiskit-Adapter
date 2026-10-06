@@ -59,12 +59,13 @@ def test_circuit():
 @pytest.fixture
 def test_circuit_mid_circuit_measurements():
     """Test circuit."""
-    qc = QuantumCircuit(1, 1)
+    qc = QuantumCircuit(2, 2)
 
     qc.h(0)
     qc.measure(0, 0)
     with qc.if_test((qc.clbits[0], True)):
         qc.x(0)
+        qc.x(1)
     qc.measure_all()
     return qc
 

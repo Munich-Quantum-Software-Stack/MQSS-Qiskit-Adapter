@@ -103,6 +103,28 @@ transpiled_circuit = compiler.transpile(circuit, backend, optimization_level=3)
 job = backend.run(transpiled_circuit, shots=1000, no_modify=True)
 ```
 
+### Select Physical Qubits
+
+To choose which physical qubits execute a circuit, provide an `initial_layout` when transpiling. The
+list position is the virtual circuit qubit, and the value is the physical backend qubit. For
+example, this maps circuit qubit 0 to physical qubit 3 and circuit qubit 1 to physical qubit 5:
+
+```python
+from qiskit import transpile
+
+transpiled_circuit = transpile(
+  circuit,
+  backend,
+  initial_layout=[3, 5],
+  optimization_level=1,
+)
+job = backend.run(transpiled_circuit, shots=1000, no_modify=True)
+```
+
+Use `no_modify=True` to prevent server-side transpilation from changing the selected mapping. If the
+selected physical qubits are not directly connected in the backend topology, Qiskit may insert SWAP
+operations. You can inspect the resulting mapping with `print(transpiled_circuit.layout)`.
+
 ### Checking the Number of Pending Jobs on a Backend
 
 To determine if a backend is overloaded, you can check the number of pending jobs using the

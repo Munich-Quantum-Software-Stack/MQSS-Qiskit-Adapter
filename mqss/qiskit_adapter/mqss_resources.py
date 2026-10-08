@@ -19,17 +19,20 @@
 """MQP Resources"""
 
 from mqss_client import ResourceInfo  # type: ignore
-from qiskit.circuit.library import Measure  # type: ignore
+from qiskit.circuit.controlflow import IfElseOp  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore
     CXGate,
     CZGate,
     HGate,
     IGate,
+    Measure,
+    Reset,
     RGate,
     RXXGate,
     RYGate,
     RZGate,
+    SwapGate,
     XGate,
     YGate,
     ZGate,
@@ -62,7 +65,11 @@ def get_target(resource_info: ResourceInfo):
 
         for _instruction, _connections in resource_info.instructions:
             try:
-                target.add_instruction(instruction_map[_instruction](), _connections)
+                instruction = instruction_map[_instruction]()
+                if isinstance(instruction, type):
+                    target.add_instruction(instruction, name=_instruction)
+                else:
+                    target.add_instruction(instruction, _connections)
             except KeyError:
                 print(
                     f"Warning: Instruction '{_instruction}' not found in the instruction_map."
@@ -136,6 +143,21 @@ def handle_measure():
     return Measure()
 
 
+def handle_reset():
+    """Handle reset instruction"""
+    return Reset()
+
+
+def handle_swap():
+    """Handle Swap gate"""
+    return SwapGate()
+
+
+def handle_if_else():
+    """Handle control-flow instruction for target construction."""
+    return IfElseOp
+
+
 instruction_map = {
     "r": handle_r,
     "id": handle_id,
@@ -144,10 +166,13 @@ instruction_map = {
     "rx": handle_rx,
     "rxx": handle_rxx,
     "measure": handle_measure,
+    "reset": handle_reset,
+    "if_else": handle_if_else,
     "cx": handle_cx,
     "ry": handle_ry,
     "h": handle_h,
     "x": handle_x,
     "y": handle_y,
     "z": handle_z,
+    "swap": handle_swap,
 }

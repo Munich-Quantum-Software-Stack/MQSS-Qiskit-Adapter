@@ -30,8 +30,8 @@ jobs:
 
       - name: Checkout MQSS Interfaces repository
         run: |
-          git clone https://x-access-token:${{ secrets.MQSS_INTERFACES_DOCS_TOKEN }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
-          git remote set-url origin https://x-access-token:${{ secrets.MQSS_INTERFACES_DOCS_TOKEN }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
+          git clone https://x-access-token:${{ secrets.MQSS_INTERFACES_DEPLOY_KEY }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
+          git remote set-url origin https://x-access-token:${{ secrets.MQSS_INTERFACES_DEPLOY_KEY }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
           cd MQSS-Interfaces
           git checkout gh-pages
           git config user.name "github-actions[bot]"

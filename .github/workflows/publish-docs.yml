@@ -29,20 +29,26 @@ jobs:
           uv run mkdocs build
 
       - name: Checkout MQSS Interfaces repository
+        uses: actions/checkout@v4
+        with:
+          repository: Munich-Quantum-Software-Stack/MQSS-Interfaces
+          ref: gh-pages
+          path: MQSS-Interfaces
+          ssh-key: ${{ secrets.MQSS_INTERFACES_DEPLOY_KEY }}
+
+      - name: Configure git
         run: |
-          git clone https://x-access-token:${{ secrets.MQSS_INTERFACES_DEPLOY_KEY }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
-          git remote set-url origin https://x-access-token:${{ secrets.MQSS_INTERFACES_DEPLOY_KEY }}@github.com/Munich-Quantum-Software-Stack/MQSS-Interfaces.git
           cd MQSS-Interfaces
-          git checkout gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull origin gh-pages
+
       - name: Copy documentation to MQSS Interfaces repository
         run: |
           cd MQSS-Interfaces
           rm -rf qiskit/*
           mkdir -p qiskit/
           cp -r ../build/docs/site/* qiskit/
+
       - name: Commit and push changes to MQSS Interfaces repository
         run: |
           cd MQSS-Interfaces

@@ -8,6 +8,8 @@ To install the MQSS Qiskit adapter, use the following command:
 pip install mqss-qiskit
 ```
 
+Python 3.10 through 3.14 is supported. On Python 3.14, installation requires Qiskit 2.1 or newer.
+
 ## Overview
 
 The Qiskit adapter for MQSS allows users to access MQSS backends through Qiskit. The main components
@@ -173,6 +175,10 @@ result = job.result()
 counts = result.get_counts()
 print("Measurement counts:", counts)
 ```
+
+`job.result()` waits until the job finishes. To limit the wait, use `job.result(timeout=300)` with a
+timeout in seconds. It raises Qiskit's `JobTimeoutError` if the wait expires, or `JobError` if the
+job fails, is cancelled, or has no available result.
 
 ### Timestamps for Job Execution
 

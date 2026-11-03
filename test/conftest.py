@@ -36,7 +36,7 @@ except KeyError:
 
 # NOTE: change to current backend names
 BACKENDS = ["EQE1"]
-URL = "https://portal.quantum.lrz.de:4000"
+URL = "https://portal.quantum.lrz.de:4000/v1/"
 
 
 @pytest.mark.skipif(TOKEN is None, reason="MQSS token not provided")

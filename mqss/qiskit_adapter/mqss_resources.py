@@ -18,15 +18,14 @@
 
 """MQP Resources"""
 
-from mqss_client import ResourceInfo  # type: ignore
 from qiskit.circuit.controlflow import IfElseOp  # type: ignore
+from qiskit.circuit.library import Measure  # type: ignore
 from qiskit.circuit.library import RXGate  # type: ignore
 from qiskit.circuit.library import (  # type: ignore
     CXGate,
     CZGate,
     HGate,
     IGate,
-    Measure,
     Reset,
     RGate,
     RXXGate,
@@ -40,40 +39,51 @@ from qiskit.circuit.library import (  # type: ignore
 from qiskit.circuit.parameter import Parameter  # type: ignore
 from qiskit.transpiler import CouplingMap, Target  # type: ignore
 
+from mqss.client import Resource  # type: ignore
 
-def get_coupling_map(resource_info: ResourceInfo):
+
+def get_coupling_map(resource: Resource):
     """Return CouplingMap for the backend"""
 
     return (
-        CouplingMap(couplinglist=resource_info.connectivity)
-        if resource_info is not None and resource_info.connectivity is not None
+        CouplingMap(couplinglist=resource.coupling_map)
+        if resource is not None
+        and resource.coupling_map is not None
+        and len(resource.coupling_map) != 0
         else None
     )
 
 
-def get_target(resource_info: ResourceInfo):
-    """Return Target for the backend"""
+def get_target(resource: Resource):
+    """Return Target for the backend."""
 
-    target = (
-        Target(num_qubits=resource_info.qubits)
-        if resource_info is not None and resource_info.instructions is not None
-        else None
-    )
+    if resource is None or not resource.native_gateset:
+        return None
 
-    if resource_info is not None and resource_info.instructions is not None:
-        assert target is not None
+    target = Target(num_qubits=resource.qubit_count)
 
-        for _instruction, _connections in resource_info.instructions:
-            try:
-                instruction = instruction_map[_instruction]()
-                if isinstance(instruction, type):
-                    target.add_instruction(instruction, name=_instruction)
-                else:
-                    target.add_instruction(instruction, _connections)
-            except KeyError:
-                print(
-                    f"Warning: Instruction '{_instruction}' not found in the instruction_map."
-                )
+    for gate in resource.native_gateset:
+        connections: dict[tuple[int, ...] | None, None]
+
+        if not gate.supported_qubits:
+            connections = {None: None}
+        else:
+            connections = {tuple(qubits): None for qubits in gate.supported_qubits}
+
+        instruction_factory = instruction_map.get(gate.name)
+
+        if instruction_factory is None:
+            print(
+                f"Warning: Instruction '{gate.name}' not found in the instruction_map."
+            )
+            continue
+
+        instruction = instruction_factory()
+
+        if isinstance(instruction, type):
+            target.add_instruction(instruction, name=gate.name)
+        else:
+            target.add_instruction(instruction, connections)
 
     return target
 

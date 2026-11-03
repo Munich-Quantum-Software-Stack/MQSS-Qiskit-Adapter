@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
       - uses: actions/checkout@v4
@@ -27,6 +27,8 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install libcurl4-openssl-dev  nlohmann-json3-dev librabbitmq-dev libboost-dev
           python -m pip install --upgrade pip
           pip install nox
           pip install uv
@@ -40,15 +42,15 @@ jobs:
           github.event.action == 'synchronize' && (contains(github.event.pull_request.changed_files,
           'mqss') || contains(github.event.pull_request.changed_files, 'tests'))
         env:
-          MQP_TOKEN: ${{ secrets.MQP_TOKEN }}
+          MQSS_TOKEN: ${{ secrets.MQP_TOKEN }}
         run: |
-          nox --session test_backend
+          uvx nox --session test_backend
       - name: Test Job when PR is merged
         if:
           github.event.pull_request.merged == true &&
           (contains(github.event.pull_request.changed_files, 'mqss') ||
           contains(github.event.pull_request.changed_files, 'tests'))
         env:
-          MQP_TOKEN: ${{ secrets.MQP_TOKEN }}
+          MQSS_TOKEN: ${{ secrets.MQP_TOKEN }}
         run: |
-          nox --session test_job
+          uvx nox --session test_job

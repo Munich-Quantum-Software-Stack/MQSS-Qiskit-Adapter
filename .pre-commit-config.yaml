@@ -80,12 +80,17 @@ repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.39.0
     hooks:
+      # These hooks need Python >= 3.11, but CI runs pre-commit once per matrix
+      # Python (3.9 to 3.13), so pin them to the runner's system Python 3.12.
       - id: check-github-workflows
+        language_version: python3.12
       - id: check-renovate
         additional_dependencies: [json5]
+        language_version: python3.12
 
   ## Check for security issues in GitHub Actions workflows
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
     rev: v1.33.0
     hooks:
       - id: zizmor
+        language_version: python3.12

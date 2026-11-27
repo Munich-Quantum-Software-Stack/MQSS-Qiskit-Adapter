@@ -80,8 +80,8 @@ repos:
   - repo: https://github.com/python-jsonschema/check-jsonschema
     rev: 0.39.0
     hooks:
-      # These hooks need Python >= 3.11, but CI runs pre-commit once per matrix
-      # Python (3.9 to 3.13), so pin them to the runner's system Python 3.12.
+      # These hooks need Python >= 3.11, so pin them to Python 3.12 even when the
+      # project environment uses an older interpreter.
       - id: check-github-workflows
         language_version: python3.12
       - id: check-renovate

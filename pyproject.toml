@@ -50,7 +50,9 @@ testpaths = ["test"]
 addopts = ["-v", "-s"]
 markers = [
     "backend: mark tests related to backend operations",
-    "job: mark tests that involve job submission",]
+    "job: mark tests that involve job submission",
+    "mock: mark tests that run against an in-memory MQP (no token or network)",
+]
 
 [tool.pdm.build]
 includes = ["mqss"]

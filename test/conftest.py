@@ -39,10 +39,11 @@ BACKENDS = ["EQE1"]
 URL = "https://portal.quantum.lrz.de:4000"
 
 
-@pytest.mark.skipif(TOKEN is None, reason="MQSS token not provided")
 @pytest.fixture
 def mqss_adapter():
     """Setup MQSSQiskitAdapter for tests."""
+    if TOKEN is None:
+        pytest.skip("MQSS token not provided")
     return MQSSQiskitAdapter(token=TOKEN, hpcqc=False, base_url=URL)
 
 

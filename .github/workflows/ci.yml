@@ -20,7 +20,8 @@ concurrency:
 
 jobs:
   testing:
-    runs-on: ubuntu-latest
+    # ubuntu-latest (26.04) no longer provides Python 3.9; 24.04 still does.
+    runs-on: ubuntu-24.04
     strategy:
       matrix:
         python: ["3.9", "3.10", "3.11", "3.12", "3.13"]

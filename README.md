@@ -45,6 +45,22 @@ print(job.result().get_counts())
 
 To get a token and see available backends visit [MQP](https://portal.quantum.lrz.de).
 
+## Testing
+
+The mocked tests replace the MQP REST API with an in-memory stand-in, so they need neither a token
+nor network access. CI runs them on every pull request, on all supported Python and Qiskit versions:
+
+```bash
+uvx nox -s tests     # every supported Python
+uvx nox -s qiskit    # every supported Qiskit release
+```
+
+The live tests run against the real MQSS service and need a token in `MQSS_TOKEN`:
+
+```bash
+MQSS_TOKEN=<TOKEN> uvx nox -s live
+```
+
 ## Contributing
 
 Feel free to open issues or submit pull requests to improve this project!

@@ -6,16 +6,21 @@ on:
     tags:
       - "v*.*.*" # Trigger on version tags
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
+        with:
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@e9aba2c848f5ebd159c070c61ea2c4e2b122355e # v2.3.4
         with:
           python-version: "3.x"
 
@@ -31,6 +36,6 @@ jobs:
         env:
           PYPI_USERNAME: __token__
           PYPI_PASSWORD: ${{ secrets.MQSS_PYPI_API_TOKEN }}
-        run: uv publish -v -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD}
+        run: uv publish -v -u ${PYPI_USERNAME} -p ${PYPI_PASSWORD} # zizmor: ignore[use-trusted-publishing] TODO: switch to PyPI trusted publishing
       - name: Test package installation
         run: uv run --with mqss-qiskit --no-project -- python -c "import mqss"

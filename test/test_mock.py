@@ -199,7 +199,9 @@ class TestBackend:
 class TestJob:
     """Job submission, status, cancellation and results."""
 
-    @pytest.mark.parametrize("qasm3, circuit_format", [(True, "qasm3"), (False, "qasm")])
+    @pytest.mark.parametrize(
+        "qasm3, circuit_format", [(True, "qasm3"), (False, "qasm")]
+    )
     def test_run_single(self, backend, mock_mqp, test_circuit, qasm3, circuit_format):
         """A single circuit is serialized and its counts returned."""
         job = backend.run(test_circuit, shots=100, qasm3=qasm3)

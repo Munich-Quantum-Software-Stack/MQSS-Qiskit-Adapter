@@ -12,7 +12,19 @@ def test_backend(session: Session, qiskit: str) -> None:
     session.run("rm", "-rf", ".venv", external=True)
     session.run("uv", "lock", "--upgrade-package", f"qiskit=={qiskit}", external=True)
     session.run("uv", "sync", external=True)
-    session.run("uv", "run", "pytest", "-v", "-s", "-m", "backend", external=True)
+    session.run(
+        "uv",
+        "run",
+        "pytest",
+        "-v",
+        "-s",
+        "-m",
+        "backend",
+        "--cov=mqss",
+        "--cov-append",
+        "--cov-report=xml",
+        external=True,
+    )
 
 
 @nox.session(python=False)
@@ -24,4 +36,16 @@ def test_job(session: Session, qiskit: str) -> None:
     session.run("rm", "-rf", ".venv", external=True)
     session.run("uv", "lock", "--upgrade-package", f"qiskit=={qiskit}", external=True)
     session.run("uv", "sync", external=True)
-    session.run("uv", "run", "pytest", "-v", "-s", "-m", "job", external=True)
+    session.run(
+        "uv",
+        "run",
+        "pytest",
+        "-v",
+        "-s",
+        "-m",
+        "job",
+        "--cov=mqss",
+        "--cov-append",
+        "--cov-report=xml",
+        external=True,
+    )

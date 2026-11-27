@@ -75,3 +75,17 @@ repos:
         language: system
         always_run: true
         pass_filenames: false
+
+  ## Check GitHub workflow and Renovate schemas
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.39.0
+    hooks:
+      - id: check-github-workflows
+      - id: check-renovate
+        additional_dependencies: [json5]
+
+  ## Check for security issues in GitHub Actions workflows
+  - repo: https://github.com/zizmorcore/zizmor-pre-commit
+    rev: v1.33.0
+    hooks:
+      - id: zizmor
